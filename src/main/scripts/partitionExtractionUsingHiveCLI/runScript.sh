@@ -19,8 +19,7 @@ temp_in="$(mktemp /tmp/Partition_DDL.XXXXXX)"
 temp_out="$(mktemp /tmp/Location_OUT.XXXXXX)"
 
 for item in ${TABLE[@]}; do
-        #echo "describe formatted ${TABLE[$i]};" >> "${temp_in}"
-        hive -e "show partitions ${TABLE[$i]};" | sed -e "s/=/='/g" -e "s/$/'/g" -e "s/\//',/g" | sed -n ':a;N;s/[^\n]*/&/2;Ta;2p;$p;D' | while read var; do
+        hive -e "show partitions ${TABLE[$i]};" | sed -e "s/=/='/g" -e "s/$/'/g" -e "s/\//',/g" | while read var; do
                         echo "describe formatted ${TABLE[$i]} partition($var);" >> "${temp_in_hive}"
                         echo "alter table ${TABLE[$i]} drop if exists partition ($var); alter table ${TABLE[$i]} add partition ($var) location " >> "${temp_in}"
                 done >> "${temp_in}"
